@@ -70,6 +70,10 @@
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-registry-prometheus</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
     </dependencies>
     <dependencyManagement>
         <dependencies>
@@ -106,7 +110,7 @@
                         <image>prabal864/java-spring:base-with-curl</image>
                     </from>
                     <to>
-                        <image>prabal864/livereconai:config-v3</image>
+                        <image>prabal864/livereconai:config-P1</image>
                     </to>
                 </configuration>
             </plugin>

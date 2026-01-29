@@ -29,12 +29,17 @@
     <properties>
         <java.version>21</java.version>
         <maven.compiler.release>${java.version}</maven.compiler.release>
+        <spring-cloud.version>2024.0.0</spring-cloud.version>
     </properties>
     <dependencies>
         <dependency>
             <groupId>io.opentelemetry.javaagent</groupId>
             <artifactId>opentelemetry-javaagent</artifactId>
             <version>1.27.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -83,6 +88,18 @@
         </dependency>
     </dependencies>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <build>
         <plugins>
             <plugin>
@@ -114,7 +131,7 @@
                     <image>prabal864/java-spring:base-with-curl</image>
                 </from>
                 <to>
-                    <image>prabal864/livereconai:account-test-v2</image>
+                    <image>prabal864/livereconai:transaction-P1</image>
                 </to>
             </configuration>
             </plugin>

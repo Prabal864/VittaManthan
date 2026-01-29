@@ -62,6 +62,10 @@
         <!-- Spring Cloud -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
 
@@ -129,6 +133,19 @@
                 <version>3.11.0</version>
                 <configuration>
                     <release>${maven.compiler.release}</release>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-maven-plugin</artifactId>
+                <version>3.5.1</version>
+                <configuration>
+                    <from>
+                        <image>prabal864/java-spring:base-with-curl</image>
+                    </from>
+                    <to>
+                        <image>prabal864/livereconai:account-P1</image>
+                    </to>
                 </configuration>
             </plugin>
         </plugins>
