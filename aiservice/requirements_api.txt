@@ -1,0 +1,27 @@
+# FastAPI Transaction Analysis Service Requirements
+
+# Core FastAPI
+fastapi==0.109.0
+uvicorn[standard]==0.27.0
+pydantic==2.5.3
+python-multipart==0.0.6
+
+# Existing RAG Pipeline Dependencies
+langchain==0.1.0
+langchain-community==0.0.13
+langchain-openai==0.0.5
+langchain-core>=0.1.16
+openai==1.10.0
+python-dotenv==1.0.0
+
+# Vector Store & Embeddings
+faiss-cpu==1.8.0
+sentence-transformers>=2.7.0
+
+# Data Processing
+pandas==2.1.4
+numpy==1.26.3
+
+# HTTP Client (for testing)
+httpx==0.26.0
+requests==2.31.0
