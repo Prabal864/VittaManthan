@@ -45,11 +45,12 @@ spec:
                 configMapKeyRef:
                   name: microservices-config
                   key: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
-            - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK-SET-URI
-              valueFrom:
-                configMapKeyRef:
-                  name: microservices-config
-                  key: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_JWK_SET_URI
+            - name: SERVICE_ACCOUNT_URL
+              value: "http://accounts:8072"
+            - name: SERVICE_AUTH_URL
+              value: "http://authservice:8086"
+            - name: SERVICE_TRANSACTION_URL
+              value: "http://transaction:8085"
           resources:
             limits:
               memory: "512Mi"

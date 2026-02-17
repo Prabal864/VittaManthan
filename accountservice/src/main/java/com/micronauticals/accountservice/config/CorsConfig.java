@@ -24,7 +24,8 @@ public class CorsConfig {
             "http://localhost:5173",
             "http://localhost:4200",
             "http://localhost:8080",
-            "http://localhost:8072"
+            "http://localhost:8072", "https://vittamanthan.netlify.app"
+
         ));
 
         // Allowed HTTP methods

@@ -11,6 +11,8 @@ import com.micronauticals.accountservice.Dto.response.financialdata.FIPResponseD
 import com.micronauticals.accountservice.Dto.response.financialdata.SetuLoginResponse;
 import reactor.core.publisher.Mono;
 
+import java.util.Map;
+
 public interface SetuAuthService {
     SetuLoginResponse login();
     Mono<ConsentResponse> createConsent(ConsentRequestDTO request);
@@ -19,4 +21,11 @@ public interface SetuAuthService {
     Mono<FIPResponseDTO> getFiData(String sessionId,String authorization);
     Mono<RevokeConsentResponse> revokeConsent(String consentID);
     Mono<DataRefreshPull> refreshDataPull(String sessionID, boolean restart);
+
+    /**
+     * Bypass method to forward prompt to RAG service and return AI response
+     * @param prompt The prompt/question from frontend
+     * @return Mono<Map> containing the AI response with "response" and "status" fields
+     */
+    Mono<Map<String, Object>> sendPromptToRagService(String prompt);
 }

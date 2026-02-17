@@ -180,4 +180,32 @@ public class SetuAuthController {
                 .collectList()
                 .map(list -> ResponseEntity.ok(ConsentsDetailsResponse.builder().consents(list).build()));
     }
+
+    /**
+     * Bypass endpoint to forward prompt to RAG service and return AI response
+     * Request body: { "prompt": "Your question or prompt text here" }
+     * Response: { "response": "AI generated response", "status": "success" }
+     */
+    @PostMapping("/prompt")
+    public Mono<ResponseEntity<Map<String, Object>>> sendPromptToAI(@RequestBody Map<String, String> request) {
+        String prompt = request.get("prompt");
+
+        if (prompt == null || prompt.trim().isEmpty()) {
+            return Mono.just(ResponseEntity.badRequest().body(Map.of(
+                    "response", "Prompt cannot be empty",
+                    "status", "error"
+            )));
+        }
+
+        return setuAuthService.sendPromptToRagService(prompt)
+                .map(ResponseEntity::ok)
+                .onErrorResume(error -> {
+                    log.error("Error processing prompt request", error);
+                    return Mono.just(ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of(
+                            "response", "Failed to process prompt: " + error.getMessage(),
+                            "status", "error"
+                    )));
+                });
+    }
+
 }

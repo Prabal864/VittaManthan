@@ -34,7 +34,7 @@ public class GatewayserverApplication {
                         )
                         .circuitBreaker(config -> config.setName("AccountCircuitBreaker"))
                         .requestRateLimiter(config -> config.setRateLimiter(redisRateLimiter()).setKeyResolver(keyResolver())))
-                        .uri("lb://ACCOUNT")
+                        .uri("http://accounts:8072")
                 )
                 .route(p -> p.path("/livereconai/prod/v1/auth/**")
                         .filters(f->f.rewritePath(
@@ -47,7 +47,7 @@ public class GatewayserverApplication {
                         )
                         .circuitBreaker(config -> config.setName("AuthCircuitBreaker"))
                         .requestRateLimiter(config -> config.setRateLimiter(redisRateLimiter()).setKeyResolver(keyResolver())))
-                        .uri("lb://AUTH")
+                        .uri("http://authservice:8086")
                 )
                 .route(p -> p.path("/livereconai/prod/v1/transaction/**")
                         .filters(f->f.rewritePath(
@@ -60,7 +60,7 @@ public class GatewayserverApplication {
                                 )
                                 .circuitBreaker(config -> config.setName("TransactionCircuitBreaker"))
                                 .requestRateLimiter(config -> config.setRateLimiter(redisRateLimiter()).setKeyResolver(keyResolver())))
-                        .uri("lb://TRANSACTION")
+                        .uri("http://transaction:8085")
                 )
                 .build();
     }

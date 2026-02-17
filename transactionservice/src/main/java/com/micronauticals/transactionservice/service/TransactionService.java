@@ -35,7 +35,7 @@ public class TransactionService implements com.micronauticals.transactionservice
     private final TransactionRepository transactionRepository;
     private final WebClient.Builder webClientBuilder;
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    private static final String RAG_SERVICE_URL = "http://localhost:9000/ingest";
+    private static final String RAG_SERVICE_URL = "http://ragservice:9000/ingest";
 
     @Override
     public Mono<FIPResponseDTO> getFiData(String sessionId, String authorization) {

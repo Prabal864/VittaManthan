@@ -1,4 +1,4 @@
-package com.micronauticals.authservices;
+package com.micronauticals.accountsservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -71,6 +71,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public AuthResponse authenticateUser(LoginRequest loginRequest) {
+        log.info("Login attempt for username: {}", loginRequest.getUsername());
         Authentication authentication = null;
         try {
             authentication = authenticationManager.authenticate(
@@ -80,6 +81,7 @@ public class UserServiceImpl implements UserService {
                     )
             );
         } catch(org.springframework.security.core.AuthenticationException e){
+            log.error("Authentication failed for username: {} - Reason: {}", loginRequest.getUsername(), e.getMessage());
             throw new com.micronauticals.authservices.exception.AuthenticationException("Invalid username or password");
         }
 

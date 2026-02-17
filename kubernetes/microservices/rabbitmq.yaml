@@ -37,15 +37,9 @@ spec:
               name: management
           env:
             - name: RABBITMQ_DEFAULT_USER
-              valueFrom:
-                secretKeyRef:
-                  name: microservices-secret
-                  key: RABBITMQ_DEFAULT_USER
+              value: "guest"
             - name: RABBITMQ_DEFAULT_PASS
-              valueFrom:
-                secretKeyRef:
-                  name: microservices-secret
-                  key: RABBITMQ_DEFAULT_PASS
+              value: "guest"
           volumeMounts:
             - mountPath: /var/lib/rabbitmq
               name: rabbitmq-data

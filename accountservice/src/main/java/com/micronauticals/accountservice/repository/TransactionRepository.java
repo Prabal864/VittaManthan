@@ -44,6 +44,9 @@ public class TransactionRepository {
     @Value("${aws.dynamodb.batch.concurrency:10}")
     private int concurrencyLevel;
 
+    @Value("${aws.dynamodb.batch.timeout:240000}")
+    private long batchTimeoutMs;
+
     @Autowired
     public TransactionRepository(
             DynamoDbEnhancedClient dynamoDbEnhancedClient,
@@ -90,7 +93,7 @@ public class TransactionRepository {
             @Override
             public Thread newThread(Runnable r) {
                 Thread thread = new Thread(r, "DynamoDbBatchWriter-" + threadNumber.getAndIncrement());
-                thread.setDaemon(true); // Don't prevent app shutdown
+                thread.setDaemon(false); // Non-daemon threads complete even if parent thread is interrupted
                 return thread;
             }
         };
@@ -131,16 +134,18 @@ public class TransactionRepository {
         }
 
         try {
-            // Wait for all batches to complete with a timeout
-            boolean completed = latch.await(5, TimeUnit.MINUTES);
+            // Wait for all batches to complete with configurable timeout (should be less than async timeout)
+            long timeoutSeconds = batchTimeoutMs / 1000;
+            boolean completed = latch.await(timeoutSeconds, TimeUnit.SECONDS);
             if (!completed) {
-                log.warn("Timeout waiting for batch operations to complete after 5 minutes, user: {}",
-                        defaultUserId);
+                log.warn("Timeout waiting for batch operations to complete after {} seconds, user: {}",
+                        timeoutSeconds, defaultUserId);
             }
         } catch (InterruptedException e) {
             log.error("Thread interrupted while waiting for batch operations, user: {}",
                     defaultUserId, e);
             Thread.currentThread().interrupt();
+            throw new RuntimeException("Batch processing interrupted", e);
         } finally {
             // Initiate graceful shutdown
             executor.shutdown();

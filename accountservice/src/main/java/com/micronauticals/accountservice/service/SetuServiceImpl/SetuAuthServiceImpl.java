@@ -68,6 +68,8 @@ public class SetuAuthServiceImpl implements SetuAuthService {
     private static final String SETU_CONSENT_URL = "https://fiu-sandbox.setu.co/v2/consents";
     private static final Logger log = LoggerFactory.getLogger(SetuAuthServiceImpl.class);
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private static final String RAG_SERVICE_URL = "http://ragservice:9000/ingest";
+    private static final String RAG_PROMPT_URL = "http://ragservice:9000/prompt";
 
     private String accessToken;
     private String refreshToken;
@@ -266,11 +268,19 @@ public class SetuAuthServiceImpl implements SetuAuthService {
                         // Step 3: Save all transactions to DynamoDB in batch
                         if (!transactions.isEmpty()) {
                             transactionRepository.saveAll(transactions);
-                            log.info("Successfully saved all {} transactions to DynamoDB, user: {}",
-                                    transactions.size());
+                            log.info("Successfully saved all {} transactions to DynamoDB", transactions.size());
+
+                            // Step 4: Send to RAG service asynchronously (fire and forget)
+                            sendTransactionsToRagService(transactions)
+                                .doOnSuccess(result -> log.info("Successfully sent {} transactions to RAG service endpoint",
+                                        transactions.size()))
+                                .doOnError(e -> log.error("Failed to send transactions to RAG service: {}", e.getMessage(), e))
+                                .subscribeOn(Schedulers.boundedElastic())
+                                .subscribe(); // Non-blocking subscribe
                         } else {
                             log.info("No transactions to save to DynamoDB, user");
                         }
+
 
                         return response;
                     } catch (Exception e) {
@@ -330,6 +340,69 @@ public class SetuAuthServiceImpl implements SetuAuthService {
                 .doOnError(error -> log.error("Error occurred while refreshing data", error));
     }
 
+
+    /**
+     * Sends transactions to the RAG service ingest endpoint
+     * @param transactions List of transactions to send
+     * @return Mono<Void> indicating completion
+     */
+    private Mono<Void> sendTransactionsToRagService(List<Transaction> transactions) {
+        WebClient webClient = webClientBuilder.build();
+
+        return webClient.post()
+                .uri(RAG_SERVICE_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(transactions)
+                .retrieve()
+                .onStatus(status -> !status.is2xxSuccessful(), response -> {
+                    log.error("Failed to send transactions to RAG service. HTTP Status: {}", response.statusCode());
+                    return response.bodyToMono(String.class)
+                            .flatMap(errorBody -> {
+                                log.error("RAG service error body: {}", errorBody);
+                                return Mono.error(new RuntimeException("Error sending to RAG service: " + errorBody));
+                            });
+                })
+                .bodyToMono(Void.class)
+                .doOnSuccess(v -> log.info("Successfully sent transactions to RAG service"))
+                .doOnError(error -> log.error("Error sending transactions to RAG service", error));
+    }
+
+    /**
+     * Bypass method to send prompt to RAG service and get AI response
+     * @param prompt The prompt/question from frontend
+     * @return Mono<Map> containing the AI response
+     */
+    public Mono<Map<String, Object>> sendPromptToRagService(String prompt) {
+        log.info("Sending prompt to RAG service: {}", prompt);
+
+        WebClient webClient = webClientBuilder.build();
+
+        Map<String, String> requestBody = Map.of("prompt", prompt);
+
+        return webClient.post()
+                .uri(RAG_PROMPT_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(requestBody)
+                .retrieve()
+                .onStatus(status -> !status.is2xxSuccessful(), response -> {
+                    log.error("Failed to get response from RAG service. HTTP Status: {}", response.statusCode());
+                    return response.bodyToMono(String.class)
+                            .flatMap(errorBody -> {
+                                log.error("RAG service error: {}", errorBody);
+                                return Mono.error(new RuntimeException("Error from RAG service: " + errorBody));
+                            });
+                })
+                .bodyToMono(new org.springframework.core.ParameterizedTypeReference<Map<String, Object>>() {})
+                .doOnSuccess(response -> log.info("Successfully received response from RAG service"))
+                .doOnError(error -> log.error("Error getting response from RAG service: {}", error.getMessage()))
+                .onErrorResume(error -> {
+                    log.error("RAG service call failed, returning error response", error);
+                    return Mono.just(Map.of(
+                            "response", "Failed to get AI response: " + error.getMessage(),
+                            "status", "error"
+                    ));
+                });
+    }
 
     private String sanitizeErrorMessage(String errorBody) {
         if (errorBody == null || errorBody.trim().isEmpty()) {
