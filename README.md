@@ -12,6 +12,10 @@
 [![AWS](https://img.shields.io/badge/AWS-DynamoDB_|_EC2_|_S3-FF9900?style=for-the-badge&logo=amazonaws&logoColor=white)](https://aws.amazon.com/)
 [![Kubernetes](https://img.shields.io/badge/K8s-Orchestration-326CE5?style=for-the-badge&logo=kubernetes&logoColor=white)](https://kubernetes.io/)
 
+<div align="center">
+  <img src="docs/screenshots/ui.png" alt="VittaManthan AI Assistant" width="100%"/>
+</div>
+
 > *"Where did I spend the most last month?" — just ask VittaManthan.*
 
 </div>
@@ -1213,3 +1217,4 @@ This project is developed for **educational and demonstration purposes** using t
 *VittaManthan — Churning Financial Wisdom from Data*
 
 </div>
+
