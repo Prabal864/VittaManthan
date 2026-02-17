@@ -42,7 +42,6 @@
 - [Environment Variables](#-environment-variables)
 - [Project Structure](#-project-structure)
 - [Contributing](#-contributing)
-- [Roadmap](#-roadmap)
 - [References](#-references)
 - [Author](#-author)
 - [License & Disclaimer](#-license--disclaimer)
@@ -1126,49 +1125,6 @@ Found a bug? Have a feature request? [Open an issue](https://github.com/Prabal02
 - **Expected vs actual behavior**
 - **Screenshots** (if applicable)
 - **Environment details** (OS, Java/Python version, etc.)
-
----
-
-## 🗺️ Roadmap
-
-VittaManthan is actively evolving. Here's what's coming next:
-
-### ✅ Completed (v1.0)
-- [x] Full Setu Account Aggregator integration
-- [x] Multi-account consent management
-- [x] RAG-powered AI assistant with vector search
-- [x] Multilingual support (English, Hindi, Hinglish)
-- [x] Transaction export (PDF, Excel, CSV)
-- [x] Docker + Kubernetes deployment manifests
-- [x] Interactive dashboard with charts
-
-### 🚧 In Progress (v1.1 — Q1 2026)
-- [ ] **Recurring Expense Detection**: Identify subscription payments, EMIs, rent
-- [ ] **Budget Planner**: Set monthly budgets with real-time tracking
-- [ ] **Category Auto-Tagging**: ML-based transaction categorization (Food, Travel, Bills, etc.)
-- [ ] **Webhook Retry Logic**: Automatic retry for failed Setu webhook deliveries
-- [ ] **Redis Caching Layer**: Distributed cache for API responses
-
-### 🔮 Future Plans (v2.0 — Q2-Q3 2026)
-- [ ] **Investment Tracking**: Link investment accounts (Mutual Funds, Stocks, FDs)
-- [ ] **Bill Reminders**: SMS/Email notifications for upcoming bills
-- [ ] **Smart Recommendations**: "You spent 30% more on dining this month — explore cheaper options"
-- [ ] **Multi-Currency Support**: Handle forex transactions for NRIs
-- [ ] **Voice Commands**: "Alexa, show my spending this month"
-- [ ] **Collaborative Finance**: Shared accounts for families, couples
-- [ ] **Advanced RAG**: Graph-based RAG for relationship discovery (e.g., "Who do I pay most frequently?")
-- [ ] **Self-Hosted LLMs**: Support for local Llama/Mistral models via Ollama
-- [ ] **Mobile App**: Native iOS/Android apps with biometric authentication
-
-### 🌱 Community Wishlist (Vote on GitHub Discussions)
-- Multiple FIP support (beyond Setu sandbox)
-- Credit score integration
-- Tax filing assistance (Form 16, 26AS reconciliation)
-- Crypto wallet integration
-- Open Banking API (non-AA) support
-
-**Want to contribute to the roadmap?** Join the discussion on [GitHub Discussions](https://github.com/Prabal0202/VittaManthan/discussions)!
-
 ---
 
 ## 📚 References
@@ -1217,4 +1173,5 @@ This project is developed for **educational and demonstration purposes** using t
 *VittaManthan — Churning Financial Wisdom from Data*
 
 </div>
+
 
